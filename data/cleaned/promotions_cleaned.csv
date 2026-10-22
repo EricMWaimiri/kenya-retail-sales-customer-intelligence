@@ -1,0 +1,16 @@
+PromotionID,PromotionName,StartDate,EndDate,DiscountPct
+1,Mazingira Day Green Sale,2025-10-08,2025-10-12,10
+2,Mashujaa Day Sale,2025-10-18,2025-10-22,15
+3,Christmas Special,2025-12-18,2025-12-26,20
+4,End of Year Clearance,2025-12-27,2025-12-31,25
+5,New Year Mega Sale,2026-01-01,2026-01-15,15
+6,Back to School,2026-01-05,2026-01-31,10
+7,Valentine's Special,2026-02-10,2026-02-14,20
+8,Idd Celebrations,2026-03-16,2026-03-22,15
+9,Easter Sale,2026-03-30,2026-04-10,12
+10,Labour Day Weekend,2026-05-01,2026-05-05,10
+11,Madaraka Day Sale,2026-05-30,2026-06-05,12
+12,Mid-Year Clearance,2026-06-15,2026-06-30,25
+13,End of Month Madness,2026-07-25,2026-07-31,8
+14,August Savings,2026-08-15,2026-08-25,15
+15,September Fest,2026-09-20,2026-09-30,12
