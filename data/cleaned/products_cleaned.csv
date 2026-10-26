@@ -1,0 +1,101 @@
+ProductID,ProductName,Category,UnitCostKsh,UnitPriceKsh
+1,Maize Flour 2kg,Food,130.0,152.0
+2,Sugar 1kg,Food,150.0,166.0
+3,Rice Pishori 2kg,Food,220.0,290.0
+4,Beans 1kg,Food,150.0,183.0
+5,Cooking Oil 1L,Food,290.0,355.0
+6,Wheat Flour 2kg,Food,145.0,170.0
+7,Fresh Milk 500ml,Food,48.0,58.0
+8,White Bread 400g,Food,50.0,66.0
+9,Eggs Tray of 30,Food,350.0,420.0
+10,Salt 1kg,Food,25.0,35.0
+11,Tea Leaves 250g,Food,90.0,115.0
+12,Coffee Beans 250g,Food,450.0,580.0
+13,Peanut Butter 400g,Food,280.0,350.0
+14,Jam 350g,Food,180.0,230.0
+15,Margarine 500g,Food,200.0,250.0
+16,Spaghetti 500g,Food,80.0,110.0
+17,Macaroni 500g,Food,85.0,115.0
+18,Oats 500g,Food,150.0,190.0
+19,Cornflakes 500g,Food,300.0,380.0
+20,Honey 500g,Food,450.0,560.0
+21,Beef 1kg,Food,650.0,780.0
+22,Chicken 1kg,Food,400.0,500.0
+23,Tilapia Fish 1kg,Food,350.0,450.0
+24,Tomatoes 1kg,Food,70.0,106.0
+25,Onions 1kg,Food,85.0,110.0
+26,Potatoes 1kg,Food,70.0,92.0
+27,Kale Sukuma Wiki 1kg,Food,70.0,92.0
+28,Cabbages 1kg,Food,50.0,72.0
+29,Carrots 1kg,Food,95.0,130.0
+30,Bananas 1kg,Food,80.0,105.0
+31,Oranges 1kg,Food,90.0,120.0
+32,Mangoes 1kg,Food,100.0,145.0
+33,Avocado 1 piece,Food,15.0,25.0
+34,Pineapple 1 piece,Food,80.0,110.0
+35,Watermelon 1 piece,Food,150.0,200.0
+36,Mandazi 4 pack,Food,40.0,60.0
+37,Chapati 4 pack,Food,60.0,85.0
+38,Sausages 500g,Food,250.0,320.0
+39,Bacon 250g,Food,350.0,440.0
+40,Snack Mix 200g,Food,100.0,140.0
+41,Soda 500ml,Beverages,50.0,70.0
+42,Soda 2L,Beverages,130.0,170.0
+43,Bottled Water 1L,Beverages,30.0,50.0
+44,Bottled Water 500ml,Beverages,20.0,35.0
+45,Mango Juice 1L,Beverages,180.0,230.0
+46,UHT Milk 1L,Beverages,110.0,140.0
+47,Yoghurt 500ml,Beverages,120.0,160.0
+48,Beer 500ml,Beverages,180.0,230.0
+49,Red Wine 750ml,Beverages,900.0,1200.0
+50,Whisky 750ml,Beverages,2200.0,2800.0
+51,Tea Bags 100 pack,Beverages,180.0,240.0
+52,Instant Coffee 200g,Beverages,600.0,750.0
+53,Hot Chocolate 400g,Beverages,450.0,560.0
+54,Energy Drink 500ml,Beverages,120.0,160.0
+55,Sports Drink 500ml,Beverages,90.0,130.0
+56,Green Tea 50 bags,Beverages,250.0,320.0
+57,Herbal Tea 20 bags,Beverages,200.0,260.0
+58,Sparkling Water 750ml,Beverages,150.0,200.0
+59,Coconut Water 500ml,Beverages,180.0,240.0
+60,Almond Milk 1L,Beverages,380.0,480.0
+61,Washing Powder 1kg,Household,180.0,230.0
+62,Washing Powder 3kg,Household,480.0,600.0
+63,Bar Soap 800g,Household,150.0,190.0
+64,Dish Soap 500ml,Household,120.0,160.0
+65,Bleach 1L,Household,90.0,125.0
+66,Toilet Cleaner 500ml,Household,180.0,230.0
+67,Floor Cleaner 1L,Household,150.0,200.0
+68,Scouring Powder 500g,Household,60.0,85.0
+69,Air Freshener 300ml,Household,250.0,320.0
+70,Mosquito Coil 10 pack,Household,90.0,125.0
+71,Mosquito Spray 400ml,Household,350.0,440.0
+72,Candles 6 pack,Household,120.0,160.0
+73,Matches 10 box,Household,30.0,50.0
+74,Tissue Roll 10 pack,Household,250.0,320.0
+75,Garbage Bags 30 pack,Household,180.0,240.0
+76,LED Bulb 9W,Household,150.0,220.0
+77,Batteries AA 4 pack,Household,180.0,240.0
+78,Extension Cord 3m,Household,350.0,480.0
+79,Plastic Bucket 20L,Household,250.0,350.0
+80,Mop and Bucket Set,Household,400.0,550.0
+81,Broom,Household,150.0,230.0
+82,Electric Iron,Household,1800.0,2500.0
+83,Electric Kettle 1.7L,Household,1500.0,2200.0
+84,Blender 1.5L,Household,3500.0,4800.0
+85,Microwave Oven 20L,Household,8500.0,11500.0
+86,Toothpaste 100ml,Personal Care,150.0,200.0
+87,Toothbrush,Personal Care,80.0,120.0
+88,Toilet Soap 100g,Personal Care,40.0,60.0
+89,Shampoo 400ml,Personal Care,350.0,440.0
+90,Conditioner 400ml,Personal Care,350.0,450.0
+91,Body Lotion 400ml,Personal Care,300.0,400.0
+92,Petroleum Jelly 250ml,Personal Care,180.0,240.0
+93,Deodorant 150ml,Personal Care,280.0,370.0
+94,Razor Pack of 5,Personal Care,180.0,250.0
+95,Shaving Foam 200ml,Personal Care,250.0,330.0
+96,Sanitary Pads 10 pack,Personal Care,120.0,160.0
+97,Baby Diapers 30 pack,Personal Care,700.0,900.0
+98,Baby Wipes 80 pack,Personal Care,250.0,330.0
+99,Talcum Powder 200g,Personal Care,150.0,200.0
+100,Hand Sanitizer 250ml,Personal Care,180.0,240.0
