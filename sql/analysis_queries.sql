@@ -331,3 +331,40 @@ SELECT
 FROM monthly m
 JOIN national_cpi c ON DATE_TRUNC('month', c."Date") = m.month
 ORDER BY m.month;
+
+
+-- Cohort Retention by Signup Month
+-- Cohort = month a customer signed up (Oct 2025 onward, the period covered by the sales data).
+-- Month 0 = signup month, Month 1 = the next month, and so on.
+-- Retention % = customers from the cohort who bought in that month / cohort size.
+WITH cohort AS (
+    SELECT
+        "Id" AS customer_id,
+        DATE_TRUNC('month', "SignupDate")::date AS cohort_month
+    FROM customers
+    WHERE "SignupDate" >= DATE '2025-10-01'
+),
+activity AS (
+    SELECT DISTINCT
+        "CustomerID" AS customer_id,
+        DATE_TRUNC('month', "TransactionDate")::date AS activity_month
+    FROM sales
+),
+cohort_size AS (
+    SELECT cohort_month, COUNT(*) AS customers_in_cohort
+    FROM cohort
+    GROUP BY cohort_month
+)
+SELECT
+    c.cohort_month,
+    cs.customers_in_cohort,
+    (EXTRACT(YEAR FROM AGE(a.activity_month, c.cohort_month)) * 12
+     + EXTRACT(MONTH FROM AGE(a.activity_month, c.cohort_month)))::int AS months_since_signup,
+    COUNT(DISTINCT a.customer_id) AS active_customers,
+    ROUND(COUNT(DISTINCT a.customer_id) * 100.0 / cs.customers_in_cohort, 1) AS retention_pct
+FROM cohort c
+JOIN cohort_size cs ON c.cohort_month = cs.cohort_month
+JOIN activity a ON c.customer_id = a.customer_id
+                AND a.activity_month >= c.cohort_month
+GROUP BY c.cohort_month, cs.customers_in_cohort, months_since_signup
+ORDER BY c.cohort_month, months_since_signup;

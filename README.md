@@ -12,6 +12,9 @@ Individual Data Science & Analytics Capstone. It analyses 15,000 synthetic retai
 - Forecast, Oct to Dec 2026 (Random Forest): 2,979, 3,022 and 2,988 units (8,989 in total). Test WAPE: 2.58%.
 - CPI rose 6.56% over the 12 months (146.84 to 156.47). The correlation with monthly units is weak (Spearman rho = 0.028, p = 0.9312).
 
+## Presentation
+Defense slides (13 slides): [presentation/capstone_defense.pdf](presentation/capstone_defense.pdf)
+
 ## Research questions
 1. How do sales value and unit demand vary over time, across product categories, and across weekdays?
 2. Which products show the largest changes in demand?
@@ -50,7 +53,7 @@ Individual Data Science & Analytics Capstone. It analyses 15,000 synthetic retai
 ```
 
 ## Requirements
-- Python with the packages in `requirements.txt` (pandas, numpy, matplotlib, seaborn, scipy, scikit-learn, pyarrow, openpyxl, jupyter, ipykernel)
+- Python with the pinned packages in `requirements.txt` (tested with pandas 3.0.5, numpy 2.5.3, scipy 1.18.1, scikit-learn 1.9.1). SciPy 1.11 or newer is needed for the Benjamini-Hochberg correction.
 - Git
 - PostgreSQL, only if you run the SQL scripts
 - Microsoft Power BI Desktop (Windows), only to open the `.pbix`
@@ -98,9 +101,56 @@ The CPI file has two base periods (36 `pre_rebase` rows and 105 `feb2019_100` ro
 ## SQL workflow
 1. Create a PostgreSQL database.
 2. Review and run `sql/schema.sql` (it only creates tables if they do not exist).
-3. Load the cleaned CSVs from `data/cleaned/` into the tables.
+3. Load the cleaned CSVs from `data/cleaned/` into the tables (commands below).
 4. Run `sql/data_validation.sql`: row counts, duplicate keys, missing key fields, invalid quantities and discounts, orphan foreign keys, sales and CPI date coverage, CPI base periods, promotion and holiday dates.
 5. Run `sql/analysis_queries.sql`: monthly trend, categories, segments, CPI comparison, store and county performance, top products, RFM segmentation, month-over-month growth, a signup-month activity matrix, promotion periods, basket size, profit rankings, and customer types.
+
+### Load the cleaned CSVs into PostgreSQL
+Run from the project root. Load order matters because `sales` references the other tables.
+
+```bash
+psql -U postgres -c "CREATE DATABASE kenya_retail;"
+psql -U postgres -d kenya_retail -f sql/schema.sql
+psql -U postgres -d kenya_retail
+```
+
+Then inside `psql`:
+
+```sql
+\copy stores FROM 'data/cleaned/stores_cleaned.csv' WITH (FORMAT csv, HEADER true)
+\copy products FROM 'data/cleaned/products_cleaned.csv' WITH (FORMAT csv, HEADER true)
+\copy customers FROM 'data/cleaned/customers_cleaned.csv' WITH (FORMAT csv, HEADER true)
+\copy promotions FROM 'data/cleaned/promotions_cleaned.csv' WITH (FORMAT csv, HEADER true)
+\copy public_holidays FROM 'data/cleaned/holidays_cleaned.csv' WITH (FORMAT csv, HEADER true)
+\copy national_cpi FROM 'data/cleaned/national_cpi_monthly_cleaned.csv' WITH (FORMAT csv, HEADER true)
+\copy sales FROM 'data/cleaned/sales_cleaned.csv' WITH (FORMAT csv, HEADER true)
+\i sql/data_validation.sql
+```
+
+Expected row counts: stores 15, products 100, customers 1,000, promotions 15, public_holidays 25, national_cpi 141, sales 15,000.
+
+### Query results (screenshots)
+| # | Query | Screenshot |
+|---|---|---|
+| 1 | Monthly sales trend | `sql/reports/01_monthly_sales_trend.png` |
+| 2 | Top categories | `sql/reports/02_top_categories.png` |
+| 3 | Sales by segment and payment method | `sql/reports/03_segment_payment.png` |
+| 4 | Monthly sales vs CPI | `sql/reports/04_sales_vs_cpi.png` |
+| 5 | Store and county performance | `sql/reports/05_store_county.png` |
+| 6 | Top 10 products | `sql/reports/06_top10_products.png` |
+| 7 | Simple RFM view | `sql/reports/07_simple_rfm.png` |
+| 8 | Month-over-month growth | `sql/reports/08_mom_growth.png` |
+| 9 | Signup-month activity matrix | `sql/reports/09_signup_activity_matrix.png` |
+| 10 | Full RFM segmentation | `sql/reports/10_full_rfm.png` |
+| 11 | Top customers by county | `sql/reports/11_top_customers_county.png` |
+| 12 | Category by month | `sql/reports/12_category_by_month.png` |
+| 13 | Promotion period impact | `sql/reports/13_promotion_impact.png` |
+| 14 | Basket size by segment and store | `sql/reports/14_basket_size.png` |
+| 15 | Profit ranking without discounts | `sql/reports/15_profit_no_discount.png` |
+| 16 | Profit ranking with discounts | `sql/reports/16_profit_with_discount.png` |
+| 17 | Customer type ranking | `sql/reports/17_customer_type.png` |
+| 18 | CPI vs sales correlation | `sql/reports/18_cpi_correlation.png` |
+| 19 | Cohort retention by signup month (new) | add a screenshot as `sql/reports/19_cohort_retention.png` after running it |
 
 Sales calculated as Quantity x UnitPriceKsh are list-price sales before discounts unless a query says otherwise. Never commit database passwords or connection strings.
 
@@ -113,6 +163,11 @@ Open `powerbi/kenya_retail_intelligence.pbix`. If asked, point each table at the
 | Product & Store Performance | Top and bottom 10 products, category and store sales, units by category over time, filters for date, category, product and store |
 | Customer Intelligence | Segment and age-group comparison, transactions and net sales per customer, repeat customer rate, customers active in the last 90 days |
 | Demand Forecast & Inflation | Forecast table, model test (actual vs predicted), CPI beside monthly units, forecast limitations |
+
+![Executive Overview](powerbi/reports/01_executive_overview.png)
+![Product and Store Performance](powerbi/reports/02_product_store_performance.png)
+![Customer Intelligence](powerbi/reports/03_customer_intelligence.png)
+![Demand Forecast and Inflation](powerbi/reports/04_demand_forecast_inflation.png)
 
 How it is built:
 - Tables: the seven cleaned tables, the three forecast exports, and a date table. Sales links to products, stores, customers and the date table.
@@ -131,7 +186,11 @@ Estimated sales value in the statistical notebook is quantity x catalogue unit p
 - **Average catalogue price vs CPI:** rho = 0.4895, p = 0.1063 (12 months). Not significant.
 - **Promotion vs non-promotion days:** mean daily sales of KSh 45,817.76 on promotion days and KSh 48,855.34 on other days; Mann-Whitney p = 0.0846. This does not show promotions are ineffective: promotion days are identified by date overlap only, because `PromotionID` was dropped from sales.
 - **Category demand vs CPI:** Personal Care rho = 0.5884, p = 0.0441; Beverages rho = -0.1331, p = 0.6801; Food rho = 0.0350, p = 0.9141; Household rho = -0.1608, p = 0.6175. With four categories tested on synthetic data, the Personal Care result is nominal and should be treated cautiously.
-- **Product trends:** 7 of 100 products had a significant monthly demand trend (p < 0.05): up for Jam 350g (rho = 0.772), Baby Wipes 80 pack, Watermelon 1 piece, Scouring Powder 500g and Coffee Beans 250g; down for Cabbages 1kg (rho = -0.646) and Mop and Bucket Set. Testing 100 products would produce about 5 false positives by chance at p < 0.05, so these trends need multiple-testing correction and more data.
+- **Promotion effect size:** the mean difference is KSh -3,038 per day (promotion minus other days), with a bootstrap 95% CI of about KSh -8,499 to +2,735. The interval includes 0.
+- **Payment method and basket value:** M-Pesa baskets average KSh 3,056 against KSh 3,155 for other methods; Mann-Whitney p = 0.718 and the bootstrap 95% CI of the difference (about -423 to +227) includes 0. No detectable difference.
+- **Product trends:** 7 of 100 products had p < 0.05 before correction (for example Jam 350g, rho = 0.772). After Benjamini-Hochberg correction for 100 tests, **none** remain significant (smallest adjusted p = 0.33). These individual trends are consistent with chance.
+
+Assumption checks: daily sales are right-skewed (Shapiro-Wilk p < 0.001 on both groups; line-level skew 11.6), which is why rank-based tests are used. Outliers were checked with the IQR rule (Quantity 620, UnitPriceKsh 9, DiscountPct 2,500 flagged) and all were kept as valid business values; see Notebook 02.
 
 These findings describe the generated dataset and should not be generalised to real Kenyan retail markets.
 
@@ -151,7 +210,21 @@ Model features are the previous three months of demand plus the month number. Th
 | Naive (last month) | 119.33 | 123.40 | 3.95 |
 | Linear Regression | 146.81 | 172.64 | 4.87 |
 
-Random Forest had the lowest error and produced the forecast of 2,979 (Oct 2026), 3,022 (Nov 2026) and 2,988 (Dec 2026) units. Only 12 monthly observations exist, so after lagging only 9 rows were usable, 6 for training and 3 for testing. The forecast is essentially flat at about 3,000 units a month, so treat it as a baseline, not a reliable operational forecast.
+Always predicting the training mean (2,998 units) gives a WAPE of 2.25%, slightly better than the Random Forest. With 6 training rows and depth 2 the forest behaves almost like that mean, so the model shows demand is flat; it has not learned seasonality.
+
+A monthly seasonal-naive baseline needs 24 months, and only 12 exist. A daily-grain check (last 56 days held out) was run instead:
+
+| Daily model | MAE | RMSE | WAPE % |
+|---|---|---|---|
+| Naive (yesterday) | 28.2 | 37.3 | 28.71 |
+| Seasonal naive (same weekday last week) | 28.2 | 37.3 | 28.71 |
+| Training mean | 18.9 | 24.6 | 19.32 |
+| Linear Regression | 19.3 | 25.1 | 19.71 |
+| Random Forest (depth 4) | 18.3 | 24.2 | 18.70 |
+
+Weekly seasonality adds nothing over a constant, which supports treating the forecast as a flat planning baseline.
+
+Random Forest had the lowest error among the monthly models and produced the forecast of 2,979 (Oct 2026), 3,022 (Nov 2026) and 2,988 (Dec 2026) units. Only 12 monthly observations exist, so after lagging only 9 rows were usable, 6 for training and 3 for testing. The forecast is essentially flat at about 3,000 units a month, so treat it as a baseline, not a reliable operational forecast.
 
 ## Recommendations
 1. Use the forecast as a baseline of about 3,000 units a month with a 3% to 5% safety buffer, and compare it with actuals as each month closes.
@@ -172,8 +245,21 @@ Random Forest had the lowest error and produced the forecast of 2,979 (Oct 2026)
 - 6 of 1,000 customers made no purchases in the period.
 - CPI is shown beside demand only; no causal link is claimed.
 
+## Data inventory
+| File | Rows | Source | Terms of use |
+|---|---|---|---|
+| `data/raw/synthetic/sales.csv` | 15,000 | Mockaroo (synthetic) | [Mockaroo terms of use](https://www.mockaroo.com/help/terms_of_use) |
+| `data/raw/synthetic/customers.csv` | 1,000 | Mockaroo (synthetic) | [Mockaroo terms of use](https://www.mockaroo.com/help/terms_of_use) |
+| `data/raw/synthetic/products.csv` | 100 | Mockaroo (synthetic) | [Mockaroo terms of use](https://www.mockaroo.com/help/terms_of_use) |
+| `data/raw/synthetic/stores.csv` | 15 | Mockaroo (synthetic) | [Mockaroo terms of use](https://www.mockaroo.com/help/terms_of_use) |
+| `data/raw/synthetic/promotions.csv` | 15 | Mockaroo (synthetic) | [Mockaroo terms of use](https://www.mockaroo.com/help/terms_of_use) |
+| `data/raw/synthetic/public_holidays.csv` | 25 | Mockaroo (synthetic) | [Mockaroo terms of use](https://www.mockaroo.com/help/terms_of_use) |
+| `data/raw/knbs/national_cpi_monthly.csv` | 141 | KNBS, <https://www.knbs.or.ke/cpi-and-inflation-rates/> | No separate terms of use found on the KNBS site; see its [Quality Policy](https://www.knbs.or.ke/quality-policy/). Cited as the source. |
+| `data/cleaned/` | n/a | Outputs of Notebook 02 and 05 | Derived from the files above |
+
 ## Evidence and deliverables
-- Cleaning: `notebooks/02_data_cleaning.ipynb`
+- Defense slides: `presentation/capstone_defense.pdf`
+- Cleaning (outlier check, feature engineering, before/after log): `notebooks/02_data_cleaning.ipynb`
 - Exploration: `notebooks/03_eda.ipynb`
 - Statistical analysis: `notebooks/04_statistical_analysis.ipynb`
 - Demand forecasting: `notebooks/05_demand_forecasting.ipynb`
